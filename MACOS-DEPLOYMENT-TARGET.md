@@ -11,7 +11,7 @@ records why, with the experiments that established it.
   exist for). It gives the lowest achievable floor (macOS 14) and freezes drift.
   `macos-latest` is a moving target (macOS 15 today → floor 15+, climbing) — the same
   trap as `ubuntu-latest` in `MATLAB-GLIBC.md`.
-- Set the macOS mexopts `MACOSX_DEPLOYMENT_TARGET=14.0` to **match the bottle**. This is
+- Set the channel's macOS mexopts `MACOSX_DEPLOYMENT_TARGET=14.0` to **match the bottle**. This is
   for honesty + keeping the version-min warning meaningful — **not** a runtime gate.
 - There is **no clean "minimum macOS" gate** for a MEX: `dyld` does not enforce `minos`
   at `dlopen`. Real compatibility is symbol-level, decided by the bottle's build target.

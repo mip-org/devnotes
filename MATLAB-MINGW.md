@@ -47,8 +47,9 @@ Integration is just the documented self-installed-MinGW hook — set the
 install and no XML editing.** Caveat from the MathWorks docs: the install
 path must contain no spaces (we use `C:\mingw810`).
 
-This is centralized in `scripts/setup_mex_compilers.m` (called by
-`bundle_one` before any package compile script), mirroring the
+This is centralized in mip_channel_tools'
+[`scripts/setup_mex_compilers.m`](https://github.com/mip-org/mip_channel_tools/blob/main/scripts/setup_mex_compilers.m)
+(called by `bundle_one` before any package compile script), mirroring the
 `gcc.xml` setup on Linux/macOS: on `windows_x86_64` it reads
 `MW_MINGW64_LOC` (falling back to `C:\mingw64` for local builds), puts the
 MinGW `bin` first on `PATH`, and selects it as the session MEX compiler via
@@ -67,7 +68,8 @@ see MEX-RUNTIME-LIBS.md).
 
 Both certify 8.1.0. Following the channel's oldest-reasonable-release
 principle (an older MEX has wider forward compatibility — see the
-per-arch `release:` choices in `build-package.yml`), R2023a is the oldest
+per-arch `release:` choices in mip_channel_tools'
+`build-package.yml` workflow), R2023a is the oldest
 release that certifies 8.1.0, so it is the Windows floor. R2022b and older
 certify only 6.3.
 

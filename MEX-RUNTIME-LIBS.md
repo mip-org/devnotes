@@ -9,8 +9,8 @@ resolved at runtime — and the one design decision in
 **bundling is deliberately non-recursive.**
 
 > The bundling code now lives in the **mip framework** under `mip.build.*` and
-> runs automatically for every MEX during `mip.bundle`. It formerly lived here as
-> `scripts/bundle_runtime_libs.m` and was called per-package from `compile.m`;
+> runs automatically for every MEX during `mip.bundle`. It formerly lived in
+> mip_channel_tools as `scripts/bundle_runtime_libs.m`, called per-package from `compile.m`;
 > this note still describes its design.
 
 ## TL;DR
@@ -58,7 +58,8 @@ The package only ever runs inside MATLAB, and MATLAB ships its own
 **not** ship `libgomp` — see below.) The build toolchain is pinned (`ubi8`
 GCC 8.5 / R2022a) precisely so the compiled code's `libgfortran`/`libstdc++`
 symbol-version requirements stay **within** what those MATLAB copies provide —
-see `MATLAB-GCC.md` and the "pins the … ABI axis" comment in `build-package.yml`.
+see `MATLAB-GCC.md` and the "pins the … ABI axis" comment in mip_channel_tools'
+`build-package.yml` workflow.
 
 A subtlety that makes skipping `libgfortran` not just safe but *necessary*: the
 dynamic loader searches `LD_LIBRARY_PATH` **before** a binary's own `$ORIGIN`
@@ -77,7 +78,9 @@ test time, the only copy left is the one we bundle, reached via the MEX's
 
 ## The strip-then-test gate is the proof (and its scope)
 
-`build-package.yml` deletes the entire compiler/runtime toolchain
+The channel build workflow (`build-package.yml` in
+[mip_channel_tools](https://github.com/mip-org/mip_channel_tools)) deletes the
+entire compiler/runtime toolchain
 (`libgfortran`/`libgomp`/`libquadmath` are purged and `ldconfig` is refreshed;
 "Verify strip" fails the build if any remain on the linker path) and then reruns
 the package's test against the bundled `.mhl`. A MEX that needs an unbundled,
