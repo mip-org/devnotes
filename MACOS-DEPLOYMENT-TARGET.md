@@ -75,8 +75,7 @@ not by `MACOSX_DEPLOYMENT_TARGET`. So `MACOSX_DEPLOYMENT_TARGET` is a build-hygi
 - **`MACOSX_DEPLOYMENT_TARGET=14.0`** — matches the bottle so the stamp is honest and the
   `-mmacosx-version-min` mismatch warning goes quiet *when matched* but still fires if a
   newer (15.0) object sneaks in. (We removed `-w` from `g++.xml` precisely to keep that
-  warning visible — see
-  [mip_channel_tools/notes/MACOS-MEX-CPP-LINKER.md](https://github.com/mip-org/mip_channel_tools/blob/main/notes/MACOS-MEX-CPP-LINKER.md)
+  warning visible — see [MACOS-MEX-CPP-LINKER.md](MACOS-MEX-CPP-LINKER.md)
   for the `-w`/`-ld_classic` story.)
 
 ## Aside: macOS needs no GCC version pin (unlike Linux), and the static-link split

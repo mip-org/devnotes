@@ -22,10 +22,12 @@ Mid-level reading — start here; each links down to the deep dives.
 | [MATLAB-BUILDTOOL.md](MATLAB-BUILDTOOL.md) | How mip packages build today and how that relates to MATLAB's `buildtool` |
 | [FILE-EXCHANGE-INSTALLS.md](FILE-EXCHANGE-INSTALLS.md) | Installing File Exchange packages with mip, and the planned URL-first install syntax |
 
-## Platform deep dives
+## Build-system deep dives
 
-MATLAB/toolchain/OS compatibility facts that hold independently of any one
-repo. Originally developed in `mip_channel_tools/notes/`.
+The technical record behind the channel build engine
+([mip_channel_tools](https://github.com/mip-org/mip_channel_tools)) and the
+`.mhl` packages it publishes. Originally developed in
+`mip_channel_tools/notes/`.
 
 | Note | What it covers |
 |---|---|
@@ -34,12 +36,14 @@ repo. Originally developed in `mip_channel_tools/notes/`.
 | [MEX-RUNTIME-LIBS.md](MEX-RUNTIME-LIBS.md) | Which shared libraries get bundled next to a MEX and why bundling is deliberately non-recursive |
 | [MACOS-DEPLOYMENT-TARGET.md](MACOS-DEPLOYMENT-TARGET.md) | The macOS floor comes from statically-linked Homebrew bottles, not `-mmacosx-version-min` |
 | [MATLAB-MINGW.md](MATLAB-MINGW.md) | MATLAB's MinGW-w64 certification story on Windows and why the Windows MATLAB floor is R2023a |
+| [MEXOPTS.md](MEXOPTS.md) | Catalog of how the channel's custom mexopts XMLs diverge from stock, with reasoning |
+| [MACOS-MEX-CPP-LINKER.md](MACOS-MEX-CPP-LINKER.md) | The C++ MEX API export list and `-ld_classic` on macOS |
+| [LINUX-LIBSTDCXX-ASNEEDED.md](LINUX-LIBSTDCXX-ASNEEDED.md) | Link failure from gcc-toolset's split `libstdc++` with `-Wl,--as-needed` |
+| [WINDOWS-TAR-XZ.md](WINDOWS-TAR-XZ.md) | Windows `.tar.xz` extraction hangs with System32 bsdtar; the workaround |
+| [MIP-YAML-BUILDS.md](MIP-YAML-BUILDS.md) | Design discussion: per-architecture `builds:` sections in `mip.yaml` |
 
-Notes that document the channel build engine's own files and operation —
-mexopts XML rationale (`MEXOPTS.md`, `MACOS-MEX-CPP-LINKER.md`,
-`LINUX-LIBSTDCXX-ASNEEDED.md`), build-environment pitfalls
-(`WINDOWS-TAR-XZ.md`), local builds (`LOCAL-BUILD.md`), and `builds:` schema
-design (`MIP-YAML-BUILDS.md`) — live with that code in
+One note stays with the channel-tools code: `LOCAL-BUILD.md`, the operational
+guide for building/publishing architectures CI can't build, lives in
 [mip_channel_tools/notes](https://github.com/mip-org/mip_channel_tools/tree/main/notes).
 
 ## Related

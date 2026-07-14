@@ -32,9 +32,9 @@ This choice was deliberate:
   declarative format would need escape hatches for all of it anyway.
 - **Architecture branching lives in `mip.yaml`.** Different platforms often
   need genuinely different build steps (see
-  [MATLAB-MINGW.md](MATLAB-MINGW.md) and the channel-config notes in
-  [mip_channel_tools/notes](https://github.com/mip-org/mip_channel_tools/tree/main/notes)
-  for why); selecting a per-arch `builds:` entry keeps that explicit.
+  [MEXOPTS.md](MEXOPTS.md), [MATLAB-MINGW.md](MATLAB-MINGW.md),
+  [WINDOWS-TAR-XZ.md](WINDOWS-TAR-XZ.md) for why); selecting a per-arch
+  `builds:` entry keeps that explicit.
 - **It works on every MATLAB release.** Channel builds intentionally run on
   old releases to maximize binary compatibility
   ([MEX-COMPATIBILITY.md](MEX-COMPATIBILITY.md)) — Linux builds on
