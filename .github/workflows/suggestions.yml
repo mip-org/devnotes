@@ -1,0 +1,83 @@
+name: Org suggestions (Claude Code)
+
+# Manually triggered. Claude explores the mip-org repositories and files short,
+# actionable suggestion issues in this (devnotes) repo. Uses the Claude subscription
+# via CLAUDE_CODE_OAUTH_TOKEN. Only reads other repos; only writes issues here.
+
+on:
+  workflow_dispatch:
+    inputs:
+      focus:
+        description: "Optional focus (repos or topic to concentrate on). Blank = scan broadly."
+        required: false
+        default: ""
+      max_issues:
+        description: "Maximum number of issues to file this run."
+        required: false
+        default: "8"
+
+jobs:
+  suggest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read      # checkout devnotes
+      issues: write       # file suggestion issues in devnotes
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}   # so Claude's `gh` calls are authenticated
+    steps:
+      - name: Checkout devnotes
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are auditing the `mip-org` GitHub organization and filing short,
+            actionable suggestion issues in `mip-org/devnotes` — the repository you
+            are running in. mip is a pip-style package manager for MATLAB.
+
+            Run inputs:
+            - FOCUS: "${{ inputs.focus }}"  (blank means scan broadly)
+            - MAX_ISSUES: ${{ inputs.max_issues }}
+
+            Steps:
+            1. Read this repo's README to learn the project's scope and conventions.
+            2. Get the current repo list with:
+                 gh repo list mip-org --limit 100 --no-archived --json name,description,visibility
+               Review PUBLIC repos only. Skip archived and private repos. If FOCUS is
+               set, restrict to the named repos/topic; otherwise scan across the org,
+               prioritizing the core repos (mip, mip-cli, mip_channel_tools, mip-core,
+               devnotes) plus any that look active.
+            3. For each repo you review: shallow-clone it into a temp dir
+               (`git clone --depth 1 https://github.com/mip-org/<repo>.git`), skim the
+               README, top-level layout, and obvious docs; and read its open issues
+               (`gh issue list -R mip-org/<repo> --state open`).
+            4. Identify concrete, high-signal improvements: outdated or missing docs,
+               inconsistencies between repos, obvious bugs or lingering TODOs, gaps in
+               CI/tests, broken links, stale content, cross-repo mismatches. Skip
+               nitpicks and cosmetic preferences.
+            5. Before filing anything, list existing issues
+               (`gh issue list -R mip-org/devnotes --state all --limit 200`) and do NOT
+               duplicate an issue that already exists (open or closed).
+            6. File each surviving suggestion as its own issue with
+               `gh issue create -R mip-org/devnotes`. Keep every issue SHORT:
+                 - Title: one concise line, prefixed with "[suggestion] ".
+                 - Body: 1-4 sentences, plus at most 3 checklist items if genuinely
+                   useful. Name the specific repo/file. No preamble, no restating these
+                   instructions, no filler.
+            7. File at most MAX_ISSUES issues total. Fewer is fine — quality over
+               quantity.
+            8. Finish by printing a short summary: repos reviewed and the titles/links
+               of the issues you filed.
+
+            Do not open pull requests, push commits, or modify any repo. Only create
+            issues in mip-org/devnotes.
+          claude_args: |
+            --model claude-opus-4-8
+            --max-turns 80
+            --allowed-tools "Bash,Read,Glob,Grep,TodoWrite"
