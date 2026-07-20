@@ -1,17 +1,17 @@
 # Installing File Exchange packages with mip
 
-> **Planned change (1.1.0):** the syntax documented here is slated to flip —
-> you will paste the File Exchange (or zip) URL directly as the argument and
-> mip will infer the package name, instead of naming the package and passing
-> the URL via `--url`. See
-> [Planned change: URL-first syntax](#planned-change-url-first-syntax-110)
-> below.
-
 mip can install a package directly from a MATLAB File Exchange landing page —
-the URL you'd copy from your browser:
+the URL you'd copy from your browser. The URL is the positional argument:
 
 ```matlab
-mip install export_fig --url https://www.mathworks.com/matlabcentral/fileexchange/23629-export_fig
+mip install https://www.mathworks.com/matlabcentral/fileexchange/23629-export_fig
+```
+
+mip infers the package name from the URL and asks you to confirm it. Pass
+`--name` to set it non-interactively:
+
+```matlab
+mip install https://www.mathworks.com/matlabcentral/fileexchange/23629-export_fig --name export_fig
 ```
 
 ## How it works
@@ -36,33 +36,26 @@ adjusted by editing the `mip.yaml` or with `mip load --addpath`/`--rmpath`.
 
 mip separates installing from loading, and loading is by name (`mip load
 export_fig`) — so every installed package needs one, and the package-store
-directory layout is keyed by it. That's the reason the current syntax takes a
-positional name with the URL in a flag.
+directory layout is keyed by it. A URL install doesn't come with a name, so
+mip derives a default from the URL and asks you to confirm it.
 
-## Planned change: URL-first syntax (1.1.0)
+## How the name is chosen
 
-The current syntax has the emphasis backwards — the natural user action is
-pasting the URL, not inventing a name:
+mip auto-detects a name from the URL. File Exchange URLs follow a parseable
+`<5-digit-id>-<slug>` format; when the slug is a title rather than a clean
+name (e.g. `2555-mesh2d-delaunay-based-unstructured-mesh-generation`), mip
+falls back to other signals such as the entry's linked GitHub repository
+name, or the zip filename for generic URLs. It then confirms interactively:
 
-```matlab
-% current (1.0.x)
-mip install export_fig --url https://www.mathworks.com/matlabcentral/fileexchange/23629-export_fig
-
-% planned (1.1.0)
-mip install https://www.mathworks.com/matlabcentral/fileexchange/23629-export_fig
+```
+Package name [mesh2d]:
 ```
 
-The plan:
+Press Enter to accept the default. `--name` overrides it non-interactively,
+and `MIP_CONFIRM=y` accepts the default without prompting.
 
-- Accept a File Exchange landing-page URL (or generic zip URL) as the
-  positional argument.
-- Auto-detect the name. File Exchange URLs follow a parseable
-  `<5-digit-id>-<slug>` format; when the slug is a title rather than a clean
-  name (e.g. `2555-mesh2d-delaunay-based-unstructured-mesh-generation`),
-  fall back to other signals such as the entry's linked GitHub repository
-  name, or the zip filename for generic URLs.
-- Confirm interactively (`Package name [mesh2d]:`), with `--name` to
-  override non-interactively.
+## Migration from the old `--url` flag
 
-This is a breaking change to the `--url` form, scheduled for 1.1.0 while the
-feature has effectively no users.
+Before 1.1.0 the name was the positional argument and the URL was passed via
+a `--url` flag (`mip install export_fig --url <url>`). That form now raises an
+error pointing at the URL-first syntax — pass the URL directly instead.
