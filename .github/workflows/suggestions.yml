@@ -53,10 +53,8 @@ jobs:
                set, restrict to the named repos/topic; otherwise scan across the org,
                prioritizing the core repos (mip, mip-cli, mip_channel_tools, mip-core,
                devnotes) plus any that look active.
-            3. For each repo you review: shallow-clone it into a temp dir
-               (`git clone --depth 1 https://github.com/mip-org/<repo>.git`), skim the
-               README, top-level layout, and obvious docs; and read its open issues
-               (`gh issue list -R mip-org/<repo> --state open`).
+            3. For each repo you review: Clone it into a temp dir so you can explore it.
+               You can also use gh to review any issues or PRs.
             4. Identify concrete, high-signal improvements: outdated or missing docs,
                inconsistencies between repos, obvious bugs or lingering TODOs, gaps in
                CI/tests, broken links, stale content, cross-repo mismatches. Skip
